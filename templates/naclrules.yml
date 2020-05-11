@@ -1,0 +1,540 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  This nested stack template is designed to simplify the creation and readibility of NACL rules
+  and creates up to 20 Inbound\Outbound NACL rules.
+
+  If an ICMP rule is specified, the ICMP code and type both default to -1.
+  Usage:
+
+  NACLRules:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        NetworkACLId: !Ref NetworkACLId
+        #RuleDefx: !Join [ ",", [ In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny ] ]
+        RuleDef01: !Join [ ",", [ In,100,6,80,80,0.0.0.0/0,allow ] ]
+        RuleDef02: !Join [ ",", [ In,200,6,443,443,0.0.0.0/0,allow ] ]
+
+        RuleDef03: !Join [ ",", [ Out,100,6,80,80,0.0.0.0/0,allow ] ]
+        RuleDef04: !Join [ ",", [ Out,200,6,443,443,0.0.0.0/0,allow ] ]
+        RuleDef05: !Join [ ",", [ Out,300,6,1024,65535,0.0.0.0/0,allow ] ]
+        RuleDef06: !Join [ ",", [ Out,400,1,-1,-1,0.0.0.0/0,allow ] ]
+      TemplateURL: "https://{S3-Bucket-URL}/naclrules.yml"
+      TimeoutInMinutes: 30
+
+Parameters: 
+  NetworkACLId:
+    Description: Network ACL that this rule will be attached to.
+    Type: String
+
+  RuleDef01:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+  
+  RuleDef02:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef03:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef04:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef05:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef06:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef07:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef08:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef09:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef10:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef11:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef12:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef13:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef14:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef15:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+  
+  RuleDef16:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef17:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef18:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef19:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+  RuleDef20:
+    Description: 'In\Out,RuleNo,ProtocolNo,FromPort,ToPort,Cidr,allow\deny'
+    Type: CommaDelimitedList
+    Default: ''
+
+Mappings: 
+  ProtocolMap: 
+    ALL: 
+      ProtocolNo: "-1"
+    TCP: 
+      ProtocolNo: "6"
+    UDP: 
+      ProtocolNo: "17"
+
+Conditions:
+  RuleDef01Egress: !Equals [ !Select [ 0, !Ref RuleDef01 ], 'Out' ]
+  RuleDef01Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef01 ], '' ]]
+
+  RuleDef02Egress: !Equals [ !Select [ 0, !Ref RuleDef02 ], 'Out' ]
+  RuleDef02Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef02 ], '' ]]
+
+  RuleDef03Egress: !Equals [ !Select [ 0, !Ref RuleDef03 ], 'Out' ]
+  RuleDef03Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef03 ], '' ]]
+
+  RuleDef04Egress: !Equals [ !Select [ 0, !Ref RuleDef04 ], 'Out' ]
+  RuleDef04Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef04 ], '' ]]
+
+  RuleDef05Egress: !Equals [ !Select [ 0, !Ref RuleDef05 ], 'Out' ]
+  RuleDef05Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef05 ], '' ]]
+
+  RuleDef06Egress: !Equals [ !Select [ 0, !Ref RuleDef06 ], 'Out' ]
+  RuleDef06Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef06 ], '' ]]
+
+  RuleDef07Egress: !Equals [ !Select [ 0, !Ref RuleDef07 ], 'Out' ]
+  RuleDef07Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef07 ], '' ]]
+
+  RuleDef08Egress: !Equals [ !Select [ 0, !Ref RuleDef08 ], 'Out' ]
+  RuleDef08Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef08 ], '' ]]
+
+  RuleDef09Egress: !Equals [ !Select [ 0, !Ref RuleDef09 ], 'Out' ]
+  RuleDef09Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef09 ], '' ]]
+
+  RuleDef10Egress: !Equals [ !Select [ 0, !Ref RuleDef10 ], 'Out' ]
+  RuleDef10Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef10 ], '' ]]
+
+  RuleDef11Egress: !Equals [ !Select [ 0, !Ref RuleDef11 ], 'Out' ]
+  RuleDef11Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef11 ], '' ]]
+
+  RuleDef12Egress: !Equals [ !Select [ 0, !Ref RuleDef12 ], 'Out' ]
+  RuleDef12Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef12 ], '' ]]
+
+  RuleDef13Egress: !Equals [ !Select [ 0, !Ref RuleDef13 ], 'Out' ]
+  RuleDef13Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef13 ], '' ]]
+
+  RuleDef14Egress: !Equals [ !Select [ 0, !Ref RuleDef14 ], 'Out' ]
+  RuleDef14Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef14 ], '' ]]
+
+  RuleDef15Egress: !Equals [ !Select [ 0, !Ref RuleDef15 ], 'Out' ]
+  RuleDef15Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef15 ], '' ]]
+
+  RuleDef16Egress: !Equals [ !Select [ 0, !Ref RuleDef16 ], 'Out' ]
+  RuleDef16Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef16 ], '' ]]
+
+  RuleDef17Egress: !Equals [ !Select [ 0, !Ref RuleDef17 ], 'Out' ]
+  RuleDef17Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef17 ], '' ]]
+
+  RuleDef18Egress: !Equals [ !Select [ 0, !Ref RuleDef18 ], 'Out' ]
+  RuleDef18Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef18 ], '' ]]
+
+  RuleDef19Egress: !Equals [ !Select [ 0, !Ref RuleDef19 ], 'Out' ]
+  RuleDef19Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef19 ], '' ]]
+
+  RuleDef20Egress: !Equals [ !Select [ 0, !Ref RuleDef20 ], 'Out' ]
+  RuleDef20Defined: !Not [!Equals [ !Select [ 0, !Ref RuleDef20 ], '' ]]
+
+Resources:
+  RuleDef01Entry:
+    Condition: RuleDef01Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef01 ]
+      Egress: !If [RuleDef01Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef01 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef01 ]
+        To: !Select [ 4, !Ref RuleDef01 ]
+      RuleAction: !Select [ 6, !Ref RuleDef01 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef01 ]
+
+  RuleDef02Entry:
+    Condition: RuleDef02Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef02 ]
+      Egress: !If [RuleDef02Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef02 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef02 ]
+        To: !Select [ 4, !Ref RuleDef02 ]
+      RuleAction: !Select [ 6, !Ref RuleDef02 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef02 ]
+    
+  RuleDef03Entry:
+    Condition: RuleDef03Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef03 ]
+      Egress: !If [RuleDef03Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef03 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef03 ]
+        To: !Select [ 4, !Ref RuleDef03 ]
+      RuleAction: !Select [ 6, !Ref RuleDef03 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef03 ]
+
+  RuleDef04Entry:
+    Condition: RuleDef04Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef04 ]
+      Egress: !If [RuleDef04Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef04 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef04 ]
+        To: !Select [ 4, !Ref RuleDef04 ]
+      RuleAction: !Select [ 6, !Ref RuleDef04 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef04 ]
+
+  RuleDef05Entry:
+    Condition: RuleDef05Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef05 ]
+      Egress: !If [RuleDef05Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef05 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef05 ]
+        To: !Select [ 4, !Ref RuleDef05 ]
+      RuleAction: !Select [ 6, !Ref RuleDef05 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef05 ]
+
+
+  RuleDef06Entry:
+    Condition: RuleDef06Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef06 ]
+      Egress: !If [RuleDef06Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef06 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef06 ]
+        To: !Select [ 4, !Ref RuleDef06 ]
+      RuleAction: !Select [ 6, !Ref RuleDef06 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef06 ]
+
+  RuleDef07Entry:
+    Condition: RuleDef07Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef07 ]
+      Egress: !If [RuleDef07Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef07 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef07 ]
+        To: !Select [ 4, !Ref RuleDef07 ]
+      RuleAction: !Select [ 6, !Ref RuleDef07 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef07 ]
+
+  RuleDef08Entry:
+    Condition: RuleDef08Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef08 ]
+      Egress: !If [RuleDef08Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef08 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef08 ]
+        To: !Select [ 4, !Ref RuleDef08 ]
+      RuleAction: !Select [ 6, !Ref RuleDef08 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef08 ]
+
+  RuleDef09Entry:
+    Condition: RuleDef09Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef09 ]
+      Egress: !If [RuleDef09Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef09 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef09 ]
+        To: !Select [ 4, !Ref RuleDef09 ]
+      RuleAction: !Select [ 6, !Ref RuleDef09 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef09 ]
+
+  RuleDef10Entry:
+    Condition: RuleDef10Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef10 ]
+      Egress: !If [RuleDef10Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef10 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef10 ]
+        To: !Select [ 4, !Ref RuleDef10 ]
+      RuleAction: !Select [ 6, !Ref RuleDef10 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef10 ]
+
+  RuleDef11Entry:
+    Condition: RuleDef11Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef11 ]
+      Egress: !If [RuleDef11Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef11 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef11 ]
+        To: !Select [ 4, !Ref RuleDef11 ]
+      RuleAction: !Select [ 6, !Ref RuleDef11 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef11 ]
+
+  RuleDef12Entry:
+    Condition: RuleDef12Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef12 ]
+      Egress: !If [RuleDef12Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef12 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef12 ]
+        To: !Select [ 4, !Ref RuleDef12 ]
+      RuleAction: !Select [ 6, !Ref RuleDef12 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef12 ]
+
+  RuleDef13Entry:
+    Condition: RuleDef13Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef13 ]
+      Egress: !If [RuleDef13Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef13 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef13 ]
+        To: !Select [ 4, !Ref RuleDef13 ]
+      RuleAction: !Select [ 6, !Ref RuleDef13 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef13 ]
+
+  RuleDef14Entry:
+    Condition: RuleDef14Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef14 ]
+      Egress: !If [RuleDef14Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef14 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef14 ]
+        To: !Select [ 4, !Ref RuleDef14 ]
+      RuleAction: !Select [ 6, !Ref RuleDef14 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef14 ]
+
+  RuleDef15Entry:
+    Condition: RuleDef15Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef15 ]
+      Egress: !If [RuleDef15Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef15 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef15 ]
+        To: !Select [ 4, !Ref RuleDef15 ]
+      RuleAction: !Select [ 6, !Ref RuleDef15 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef15 ]
+
+  RuleDef16Entry:
+    Condition: RuleDef16Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef16 ]
+      Egress: !If [RuleDef16Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef16 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef16 ]
+        To: !Select [ 4, !Ref RuleDef16 ]
+      RuleAction: !Select [ 6, !Ref RuleDef16 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef16 ]
+
+  RuleDef17Entry:
+    Condition: RuleDef17Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef17 ]
+      Egress: !If [RuleDef17Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef17 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef17 ]
+        To: !Select [ 4, !Ref RuleDef17 ]
+      RuleAction: !Select [ 6, !Ref RuleDef17 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef17 ]
+
+  RuleDef18Entry:
+    Condition: RuleDef18Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef18 ]
+      Egress: !If [RuleDef18Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef18 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef18 ]
+        To: !Select [ 4, !Ref RuleDef18 ]
+      RuleAction: !Select [ 6, !Ref RuleDef18 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef18 ]
+
+  RuleDef19Entry:
+    Condition: RuleDef19Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef19 ]
+      Egress: !If [RuleDef19Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef19 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef19 ]
+        To: !Select [ 4, !Ref RuleDef19 ]
+      RuleAction: !Select [ 6, !Ref RuleDef19 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef19 ]
+
+  RuleDef20Entry:
+    Condition: RuleDef20Defined
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      CidrBlock: !Select [ 5, !Ref RuleDef20 ]
+      Egress: !If [RuleDef20Egress, true, false]
+      NetworkAclId: !Ref NetworkACLId
+      Protocol: !Select [ 2, !Ref RuleDef20 ]
+      Icmp:
+        Code: -1
+        Type: -1
+      PortRange:
+        From: !Select [ 3, !Ref RuleDef20 ]
+        To: !Select [ 4, !Ref RuleDef20 ]
+      RuleAction: !Select [ 6, !Ref RuleDef20 ]
+      RuleNumber: !Select [ 1, !Ref RuleDef20 ]
