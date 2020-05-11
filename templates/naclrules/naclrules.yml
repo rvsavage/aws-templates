@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  This nested stack template is designed to simplify the creation and readibility of NACL rules
+  This nested stack template is designed to simplify the creation and readability of NACL rules
   and creates up to 20 Inbound\Outbound NACL rules.
 
   If an ICMP rule is specified, the ICMP code and type both default to -1.
